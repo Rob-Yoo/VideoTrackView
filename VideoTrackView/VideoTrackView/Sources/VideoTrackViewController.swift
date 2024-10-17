@@ -9,16 +9,6 @@ import AVFoundation
 import UIKit
 
 final class VideoTrackViewController: UIViewController {
-
-    private var colors: [UIColor] = [.link, .systemRed, .systemOrange, .systemPink, .systemYellow, .systemTeal, .systemTeal, .systemGray, .brown]
-    private let videoURL = Bundle.main.url(forResource: "Sample1", withExtension: "mp4")
-    private lazy var asset = AVAsset(url: videoURL ?? URL(string: "")!)
-    private lazy var imageGenerator = {
-        let generator = AVAssetImageGenerator(asset: asset)
-        generator.requestedTimeToleranceBefore = .zero
-        generator.requestedTimeToleranceAfter = CMTime(seconds: 3, preferredTimescale: 600)
-        return generator
-    }()
     
     private let imageView = {
         let imgView = UIImageView()
@@ -49,7 +39,7 @@ final class VideoTrackViewController: UIViewController {
         configureHierarchy()
         configureLayout()
         addUserAction()
-        Task { await makeVideoThumbnailImageView() }
+        Task { await makeVideoThumbnailImageView(time: 0, item: 0) }
     }
     
     private func createLayout() -> UICollectionViewLayout {
@@ -109,10 +99,10 @@ final class VideoTrackViewController: UIViewController {
         }
     }
     
-    private func makeVideoThumbnailImageView() async {
+    private func makeVideoThumbnailImageView(time: Double, item: Int) async {
         do {
-            let time = CMTime(seconds: 5, preferredTimescale: 600)
-            let image = try await imageGenerator.image(at: time).image
+            let time = CMTime(seconds: time, preferredTimescale: 600)
+            let image = try await VideoAsset.thumbnailGeneratorList[item].image(at: time).image
     
             DispatchQueue.main.async { [weak self] in
                 self?.imageView.image = UIImage(cgImage: image)
@@ -123,14 +113,56 @@ final class VideoTrackViewController: UIViewController {
     }
 }
 
+extension VideoTrackViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if let indexPath = findCellUnderPlayerHead() {
+            Task {
+                let videoTime = await calculateVideoTime(for: indexPath)
+                await makeVideoThumbnailImageView(time: videoTime, item: indexPath.item)
+            }
+        }
+    }
+    
+    func findCellUnderPlayerHead() -> IndexPath? {
+        let visibleCells = collectionView.visibleCells
+        
+        for cell in visibleCells {
+            let cellFrame = collectionView.convert(cell.frame, to: view)
+
+            if playHeadView.frame.minX >= cellFrame.minX && playHeadView.frame.maxX <= cellFrame.maxX {
+                if let indexPath = collectionView.indexPath(for: cell) {
+                    return indexPath
+                }
+            }
+        }
+        
+        return nil
+    }
+    
+    func calculateVideoTime(for indexPath: IndexPath) async -> Double {
+        let totalVideoDuration = await VideoAsset.loadDurationList()[indexPath.item]
+        
+        if let cell = collectionView.cellForItem(at: indexPath) {
+            let cellFrame = collectionView.convert(cell.frame, to: view)
+            let playheadRelativePosition = (playHeadView.frame.minX - cellFrame.minX) / cellFrame.width
+            let videoTime = playheadRelativePosition * totalVideoDuration
+            return videoTime
+        }
+        
+        return 0.0
+    }
+}
+
 extension VideoTrackViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return colors.count
+        return VideoAsset.thumbnailGeneratorList.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MockCell.id, for: indexPath) as? MockCell else { return UICollectionViewCell() }
-        cell.backgroundColor = colors[indexPath.item]
+        let imageGenerator = VideoAsset.thumbnailGeneratorList[indexPath.item]
+        
+        Task { await cell.configureCell(imageGenerator: imageGenerator) }
         return cell
     }
     
@@ -139,21 +171,40 @@ extension VideoTrackViewController: UICollectionViewDelegate, UICollectionViewDa
     }
     
     func collectionView(_ collectionView: UICollectionView, moveItemAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        let item = colors.remove(at: sourceIndexPath.row)
-        colors.insert(item, at: destinationIndexPath.row)
+        let item = VideoAsset.thumbnailGeneratorList.remove(at: sourceIndexPath.row)
+        VideoAsset.thumbnailGeneratorList.insert(item, at: destinationIndexPath.row)
     }
 }
 
 final class MockCell: UICollectionViewCell {
     static let id = String(describing: MockCell.self)
+    private let imageView = {
+        let imgView = UIImageView()
+        imgView.layer.cornerRadius = 10
+        imgView.clipsToBounds = true
+        return imgView
+    }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        contentView.layer.cornerRadius = 10
-        contentView.clipsToBounds = true
+        self.contentView.addSubview(imageView)
+        imageView.frame = contentView.bounds
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func configureCell(imageGenerator: AVAssetImageGenerator) async {
+        do {
+            let time = CMTime(seconds: 1, preferredTimescale: 600)
+            let image = try await imageGenerator.image(at: time).image
+    
+            DispatchQueue.main.async { [weak self] in
+                self?.imageView.image = UIImage(cgImage: image)
+            }
+        } catch {
+            print(error.localizedDescription)
+        }
     }
 }
