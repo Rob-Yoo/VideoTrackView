@@ -12,8 +12,9 @@ final class VideoTrackViewController: UIViewController {
     
     private let rootView = VideoTrackView()
     private var videoTrackList: [VideoTrackModel]
-    var lastOffsetCapture: TimeInterval = .zero
-    let throttleInterval = 0.1
+
+    private var lastOffsetCapture: TimeInterval = .zero
+    private let throttleInterval = 0.1
     
     init(videoTrackList: [VideoTrackModel]) {
         self.videoTrackList = videoTrackList
@@ -134,8 +135,9 @@ extension VideoTrackViewController: UICollectionViewDelegate, UICollectionViewDa
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: VideoCell.identifier, for: indexPath) as? VideoCell else { return UICollectionViewCell() }
         let thumbnails = videoTrackList[indexPath.item].thumbnails
+        let duration = (videoTrackList[indexPath.item].duration * 10).rounded() / 10
         
-        cell.configureCell(thumbnails: thumbnails)
+        cell.configureCell(thumbnails: thumbnails, duration: duration)
         return cell
     }
     
