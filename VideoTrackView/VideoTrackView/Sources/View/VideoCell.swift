@@ -8,9 +8,7 @@
 import UIKit
 
 final class VideoCell: UICollectionViewCell {
-    
-    static let identifier = String(describing: VideoCell.self)
-    
+
     private var thumbnailStackView = {
         let stackView = UIStackView()
         

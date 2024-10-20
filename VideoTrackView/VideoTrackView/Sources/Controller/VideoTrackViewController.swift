@@ -89,8 +89,8 @@ extension VideoTrackViewController {
                 if let indexPath = rootView.collectionView.indexPath(for: cell) {
                     let totalVideoDuration = videoTrackList[indexPath.item].duration
                     let playheadRelativePosition = (playHeadMidX - cellFrame.minX) / cellFrame.width
-                    let videoTime = playheadRelativePosition * totalVideoDuration
-
+                    let videoTime = (playheadRelativePosition * totalVideoDuration * 100).rounded() / 100
+                    print(videoTime)
                     await updateThumbnailImageView(time: videoTime, idx: indexPath.item)
                     break
                 }

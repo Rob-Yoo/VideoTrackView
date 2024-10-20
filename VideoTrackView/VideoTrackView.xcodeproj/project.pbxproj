@@ -27,6 +27,7 @@
 		CCC121FC2CC408DE00E1CF18 /* VideoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCC121FB2CC408DE00E1CF18 /* VideoCell.swift */; };
 		CCC121FE2CC4443800E1CF18 /* VideoTrackModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCC121FD2CC4443800E1CF18 /* VideoTrackModel.swift */; };
 		CCC122022CC4465000E1CF18 /* VideoTrackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCC122012CC4465000E1CF18 /* VideoTrackView.swift */; };
+		CCC122052CC4F47300E1CF18 /* IdentifierProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCC122042CC4F47300E1CF18 /* IdentifierProtocol.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,6 +53,7 @@
 		CCC121FB2CC408DE00E1CF18 /* VideoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCell.swift; sourceTree = "<group>"; };
 		CCC121FD2CC4443800E1CF18 /* VideoTrackModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTrackModel.swift; sourceTree = "<group>"; };
 		CCC122012CC4465000E1CF18 /* VideoTrackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTrackView.swift; sourceTree = "<group>"; };
+		CCC122042CC4F47300E1CF18 /* IdentifierProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifierProtocol.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -144,6 +146,7 @@
 			children = (
 				CCAED5E62CBF2DDF00BFC3C5 /* VideoTrackLoader.swift */,
 				CC8EBB192CBD16B100BC5121 /* UIView+Extension.swift */,
+				CCC122042CC4F47300E1CF18 /* IdentifierProtocol.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -261,6 +264,7 @@
 				CC8EBB002CBCF96600BC5121 /* SceneDelegate.swift in Sources */,
 				CCC122022CC4465000E1CF18 /* VideoTrackView.swift in Sources */,
 				CCC121FC2CC408DE00E1CF18 /* VideoCell.swift in Sources */,
+				CCC122052CC4F47300E1CF18 /* IdentifierProtocol.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -407,10 +411,11 @@
 				DEVELOPMENT_TEAM = YWNQ4RZBTS;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = VideoTrackView/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "유진영";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -439,10 +444,11 @@
 				DEVELOPMENT_TEAM = YWNQ4RZBTS;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = VideoTrackView/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "유진영";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
