@@ -82,7 +82,7 @@ extension VideoTrackView {
 //MARK: - Update UI
 extension VideoTrackView {
     @MainActor
-    func updateImageView(_ cgImage: CGImage) {
+    func updateThumbnailImageView(_ cgImage: CGImage) {
         thumbnailView.image = UIImage(cgImage: cgImage)
     }
 }

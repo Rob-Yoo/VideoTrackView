@@ -31,7 +31,7 @@ final class VideoTrackViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         addUserAction()
-        Task { await updateThumbnailImageView(time: 0, idx: 0) }
+        Task { await updateThumbnailImageView(time: 0, videoIdx: 0) }
     }
     
     private func addUserAction() {
@@ -52,7 +52,24 @@ extension VideoTrackViewController: UIScrollViewDelegate {
         let timeDiff = currentTime - lastOffsetCapture
         
         if timeDiff > throttleInterval {
-            Task { await trackCurrentThumbnail() }
+            
+            // 맨처음
+            if scrollView.contentOffset.x <= 0 {
+                Task { await updateThumbnailImageView(time: 0, videoIdx: 0) }
+            }
+            // 맨끝
+            else if scrollView.contentOffset.x + scrollView.frame.width >= scrollView.contentSize.width {
+                
+                guard let lastVideo = videoTrackList.last else { return }
+
+                let lastTime = lastVideo.duration
+                let lastIdx = videoTrackList.count - 1
+                Task { await updateThumbnailImageView(time: lastTime, videoIdx: lastIdx) }
+            }
+            else {
+                Task { await trackCurrentThumbnail() }
+            }
+            
             lastOffsetCapture = currentTime
         }
     }
@@ -77,12 +94,12 @@ extension VideoTrackViewController: UIScrollViewDelegate {
 //MARK: - Presentation Logic
 extension VideoTrackViewController {
     
-    private func updateThumbnailImageView(time: Double, idx: Int) async {
+    private func updateThumbnailImageView(time: Double, videoIdx: Int) async {
         let time = CMTime(seconds: time, preferredTimescale: 600)
-        let imageGenerator = videoTrackList[idx].imageGenerator
+        let imageGenerator = videoTrackList[videoIdx].imageGenerator
         
         if let image = try? await imageGenerator.image(at: time).image {
-            rootView.updateImageView(image)
+            rootView.updateThumbnailImageView(image)
         }
     }
     
@@ -99,7 +116,7 @@ extension VideoTrackViewController {
                     let playheadRelativePosition = (playHeadMidX - cellFrame.minX) / cellFrame.width
                     let videoTime = (playheadRelativePosition * totalVideoDuration * 100).rounded() / 100
 
-                    await updateThumbnailImageView(time: videoTime, idx: indexPath.item)
+                    await updateThumbnailImageView(time: videoTime, videoIdx: indexPath.item)
                     break
                 }
             }
