@@ -12,7 +12,8 @@ final class VideoTrackViewController: UIViewController {
     
     private let rootView = VideoTrackView()
     private var videoTrackList: [VideoTrackModel]
-    private var currentTask: Task<Void, Never>?
+    var lastOffsetCapture: TimeInterval = .zero
+    let throttleInterval = 0.1
     
     init(videoTrackList: [VideoTrackModel]) {
         self.videoTrackList = videoTrackList
@@ -46,8 +47,14 @@ final class VideoTrackViewController: UIViewController {
 extension VideoTrackViewController: UIScrollViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        currentTask?.cancel()
-        currentTask = Task { await trackCurrentThumbnail() }
+        
+        let currentTime = Date.timeIntervalSinceReferenceDate
+        let timeDiff = currentTime - lastOffsetCapture
+        
+        if timeDiff > throttleInterval {
+            Task { await trackCurrentThumbnail() }
+            lastOffsetCapture = currentTime
+        }
     }
     
     @objc
@@ -72,8 +79,9 @@ extension VideoTrackViewController {
     
     private func updateThumbnailImageView(time: Double, idx: Int) async {
         let time = CMTime(seconds: time, preferredTimescale: 600)
-
-        if let image = try? await videoTrackList[idx].imageGenerator.image(at: time).image {
+        let imageGenerator = videoTrackList[idx].imageGenerator
+        
+        if let image = try? await imageGenerator.image(at: time).image {
             rootView.updateImageView(image)
         }
     }
@@ -90,7 +98,7 @@ extension VideoTrackViewController {
                     let totalVideoDuration = videoTrackList[indexPath.item].duration
                     let playheadRelativePosition = (playHeadMidX - cellFrame.minX) / cellFrame.width
                     let videoTime = (playheadRelativePosition * totalVideoDuration * 100).rounded() / 100
-                    print(videoTime)
+
                     await updateThumbnailImageView(time: videoTime, idx: indexPath.item)
                     break
                 }
@@ -99,7 +107,7 @@ extension VideoTrackViewController {
     }
 }
 
-//MARK: - Configure CollectionView
+//MARK: - CollectionView Delegate/DataSource
 extension VideoTrackViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

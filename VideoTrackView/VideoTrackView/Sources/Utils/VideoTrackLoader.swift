@@ -28,9 +28,9 @@ final class VideoTrackLoader {
         for url in videoBundleUrls {
             let asset = AVAsset(url: url)
             let imageGenerator = AVAssetImageGenerator(asset: asset)
-            imageGenerator.requestedTimeToleranceBefore = CMTime(seconds: 0.5, preferredTimescale: 600)
-            imageGenerator.requestedTimeToleranceAfter = CMTime(seconds: 0.5, preferredTimescale: 600)
             
+            imageGenerator.requestedTimeToleranceBefore = CMTime(seconds: .zero, preferredTimescale: 600)
+            imageGenerator.requestedTimeToleranceAfter = CMTime(seconds: .zero, preferredTimescale: 600)
             let duration = (try? await asset.load(.duration).seconds) ?? 0.0
             var cmtimes = [CMTime]()
             var thumbnails = [CGImage]()

@@ -9,7 +9,7 @@ import UIKit
 
 final class VideoTrackView: UIView {
     
-    let imageView = {
+    let thumbnailView = {
         let imgView = UIImageView()
         imgView.layer.cornerRadius = 10
         imgView.clipsToBounds = true
@@ -53,26 +53,26 @@ extension VideoTrackView {
     }
     
     private func configureHierarchy() {
-        self.addSubview(imageView)
+        self.addSubview(thumbnailView)
         self.addSubview(collectionView)
         self.addSubview(playHeadView)
     }
     
     private func configureLayout() {
-        imageView
+        thumbnailView
             .topAnchor(self.safeAreaLayoutGuide.topAnchor, padding: 50)
             .centerXAnchor(self.centerXAnchor)
             .widthAnchor(self.widthAnchor)
             .heightAnchor(self.heightAnchor, multiplier: 0.35)
         
         collectionView
-            .topAnchor(imageView.bottomAnchor, padding: 55)
+            .topAnchor(thumbnailView.bottomAnchor, padding: 55)
             .centerXAnchor(self.centerXAnchor)
             .widthAnchor(self.widthAnchor)
             .heightAnchor(equalToConstant: 75)
         
         playHeadView
-            .topAnchor(imageView.bottomAnchor, padding: 50)
+            .topAnchor(thumbnailView.bottomAnchor, padding: 50)
             .centerXAnchor(self.centerXAnchor)
             .widthAnchor(equalToConstant: 3)
             .heightAnchor(equalToConstant: 85)
@@ -83,6 +83,6 @@ extension VideoTrackView {
 extension VideoTrackView {
     @MainActor
     func updateImageView(_ cgImage: CGImage) {
-        imageView.image = UIImage(cgImage: cgImage)
+        thumbnailView.image = UIImage(cgImage: cgImage)
     }
 }
