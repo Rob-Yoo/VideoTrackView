@@ -28,6 +28,7 @@
 		CCC121FE2CC4443800E1CF18 /* VideoTrackModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCC121FD2CC4443800E1CF18 /* VideoTrackModel.swift */; };
 		CCC122022CC4465000E1CF18 /* VideoTrackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCC122012CC4465000E1CF18 /* VideoTrackView.swift */; };
 		CCC122052CC4F47300E1CF18 /* IdentifierProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCC122042CC4F47300E1CF18 /* IdentifierProtocol.swift */; };
+		CCCB7A8B2CC6398700FB7FCA /* UserDefaultsStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCCB7A8A2CC6398700FB7FCA /* UserDefaultsStorage.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -54,6 +55,7 @@
 		CCC121FD2CC4443800E1CF18 /* VideoTrackModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTrackModel.swift; sourceTree = "<group>"; };
 		CCC122012CC4465000E1CF18 /* VideoTrackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTrackView.swift; sourceTree = "<group>"; };
 		CCC122042CC4F47300E1CF18 /* IdentifierProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifierProtocol.swift; sourceTree = "<group>"; };
+		CCCB7A8A2CC6398700FB7FCA /* UserDefaultsStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsStorage.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -147,6 +149,7 @@
 				CCAED5E62CBF2DDF00BFC3C5 /* VideoTrackLoader.swift */,
 				CC8EBB192CBD16B100BC5121 /* UIView+Extension.swift */,
 				CCC122042CC4F47300E1CF18 /* IdentifierProtocol.swift */,
+				CCCB7A8A2CC6398700FB7FCA /* UserDefaultsStorage.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -256,6 +259,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CCCB7A8B2CC6398700FB7FCA /* UserDefaultsStorage.swift in Sources */,
 				CC8EBB022CBCF96600BC5121 /* VideoTrackViewController.swift in Sources */,
 				CC8EBAFE2CBCF96600BC5121 /* AppDelegate.swift in Sources */,
 				CCAED5E72CBF2DDF00BFC3C5 /* VideoTrackLoader.swift in Sources */,

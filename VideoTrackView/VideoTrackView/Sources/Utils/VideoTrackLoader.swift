@@ -7,30 +7,31 @@
 
 import AVFoundation
 
+
 final class VideoTrackLoader {
     
-    private let videoBundleUrls = [
-        Bundle.main.url(forResource: "Sample1", withExtension: "mp4"),
-        Bundle.main.url(forResource: "Sample2", withExtension: "mp4"),
-        Bundle.main.url(forResource: "Sample3", withExtension: "mp4"),
-        Bundle.main.url(forResource: "Sample4", withExtension: "mp4"),
-        Bundle.main.url(forResource: "Sample5", withExtension: "mp4"),
-        Bundle.main.url(forResource: "Sample6", withExtension: "mp4"),
-        Bundle.main.url(forResource: "Sample7", withExtension: "mp4"),
-        Bundle.main.url(forResource: "Sample8", withExtension: "mp4"),
-        Bundle.main.url(forResource: "Sample9", withExtension: "mp4"),
-        Bundle.main.url(forResource: "Sample10", withExtension: "mp4")
-    ].compactMap { $0 }
+    private enum VideoAsset {
+        static let fileNames = [
+            "Sample1", "Sample2", "Sample3", "Sample4", "Sample5", "Sample6", "Sample7", "Sample8", "Sample9", "Sample10"
+        ]
+    }
+    
+    private let videoTracks: [String] = {
+        return UserDefaultsStorage.videoTrackOrder ?? VideoAsset.fileNames
+    }()
     
     func loadVideoTrackList() async -> [VideoTrackModel] {
         var videoTrackList = [VideoTrackModel]()
+        
+        for videoTrack in videoTracks {
+    
+            guard let url = Bundle.main.url(forResource: videoTrack, withExtension: "mp4") else { continue }
 
-        for url in videoBundleUrls {
             let asset = AVAsset(url: url)
             let imageGenerator = AVAssetImageGenerator(asset: asset)
-            
-            imageGenerator.requestedTimeToleranceBefore = CMTime(seconds: .zero, preferredTimescale: 600)
-            imageGenerator.requestedTimeToleranceAfter = CMTime(seconds: .zero, preferredTimescale: 600)
+
+            imageGenerator.requestedTimeToleranceBefore = .zero
+            imageGenerator.requestedTimeToleranceAfter = .zero
             let duration = (try? await asset.load(.duration).seconds) ?? 0.0
             var cmtimes = [CMTime]()
             var thumbnails = [CGImage]()
@@ -48,6 +49,7 @@ final class VideoTrackLoader {
             }
             
             let videoTrackModel = VideoTrackModel(
+                fileName: videoTrack,
                 imageGenerator: imageGenerator,
                 duration: duration,
                 thumbnails: thumbnails

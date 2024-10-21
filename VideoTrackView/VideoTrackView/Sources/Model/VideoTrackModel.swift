@@ -8,6 +8,7 @@
 import AVFoundation
 
 struct VideoTrackModel {
+    let fileName: String
     let imageGenerator: AVAssetImageGenerator
     let duration: Double
     let thumbnails: [CGImage]

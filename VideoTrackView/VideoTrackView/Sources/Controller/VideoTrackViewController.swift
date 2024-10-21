@@ -11,10 +11,14 @@ import UIKit
 final class VideoTrackViewController: UIViewController {
     
     private let rootView = VideoTrackView()
-    private var videoTrackList: [VideoTrackModel]
+    private var videoTrackList: [VideoTrackModel] {
+        willSet {
+            UserDefaultsStorage.videoTrackOrder = newValue.map { $0.fileName }
+        }
+    }
 
     private var lastOffsetCapture: TimeInterval = .zero
-    private let throttleInterval = 0.1
+    private let throttleInterval = 0.05
     
     init(videoTrackList: [VideoTrackModel]) {
         self.videoTrackList = videoTrackList
